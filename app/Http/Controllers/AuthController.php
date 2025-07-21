@@ -27,4 +27,24 @@ class AuthController extends Controller
         // Return a response
         return response()->json(['token' => $token], 201);
     }
+
+    public function login(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        // Attempt to authenticate the user
+        if (!\Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = \Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Return a response
+        return response()->json(['token' => $token]);
+    }
 }
