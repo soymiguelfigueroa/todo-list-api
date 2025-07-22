@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->prefix('/todos')->group(function (){
     Route::post('/', [TodoController::class, 'store']);
     Route::put('/{todo}', [TodoController::class, 'update']);
     Route::delete('/{todo}', [TodoController::class, 'delete']);
+    Route::get('/', [TodoController::class, 'index']);
 });

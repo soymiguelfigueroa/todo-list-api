@@ -65,4 +65,13 @@ class TodoController extends Controller
         // Return a response
         return response()->json(null, 204);
     }
+
+    public function index()
+    {
+        // Get all todo items for the authenticated user
+        $todos = request()->user()->todos()->paginate();
+
+        // Return a response
+        return response()->json($todos, 200);
+    }
 }
