@@ -68,8 +68,9 @@ class TodoController extends Controller
 
     public function index()
     {
+        $perPage = request()->get('limit', 15);
         // Get all todo items for the authenticated user
-        $todos = request()->user()->todos()->paginate();
+        $todos = request()->user()->todos()->paginate($perPage);
 
         // Return a response
         return response()->json($todos, 200);
