@@ -51,4 +51,18 @@ class TodoController extends Controller
             'description' => $todo->description,
         ]);
     }
+
+    public function delete(Todo $todo)
+    {
+        // Ensure the authenticated user owns the todo item
+        if ($todo->user_id !== request()->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Delete the todo item
+        $todo->delete();
+
+        // Return a response
+        return response()->json(null, 204);
+    }
 }

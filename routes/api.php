@@ -12,3 +12,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::post('/todos', [TodoController::class, 'store'])->middleware('auth:sanctum');
 Route::put('/todos/{todo}', [TodoController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/todos/{todo}', [TodoController::class, 'delete'])->middleware('auth:sanctum');
