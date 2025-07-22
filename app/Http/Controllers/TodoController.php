@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTodoRequest;
+use App\Http\Requests\UpdateTodoRequest;
+use \App\Models\Todo;
 
 class TodoController extends Controller
 {
@@ -15,7 +17,7 @@ class TodoController extends Controller
         $todo = $request->validated();
 
         // Create the todo item
-        $todo = \App\Models\Todo::create([
+        $todo = Todo::create([
             'user_id' => $request->user()->id,
             'title' => $todo['title'],
             'description' => $todo['description'],
@@ -27,5 +29,26 @@ class TodoController extends Controller
             'title' => $todo->title,
             'description' => $todo->description,
         ], 201);
+    }
+
+    public function update(UpdateTodoRequest $request, Todo $todo)
+    {
+        // Ensure the authenticated user owns the todo item
+        if ($todo->user_id !== $request->user()->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Update the todo item
+        $data = $request->validated();
+        $todo->title = $data['title'] ?? $todo->title;
+        $todo->description = $data['description'] ?? $todo->description;
+        $todo->update();
+
+        // Return a response
+        return response()->json([
+            'id' => $todo->id,
+            'title' => $todo->title,
+            'description' => $todo->description,
+        ]);
     }
 }
